@@ -20,7 +20,7 @@ LOGGER = logging.getLogger('SublimeLinter.plugin.elm')
 
 
 class Elm(Linter):
-    """Provides an interface to elm make linting"""
+    """Provides an interface to elm make linting."""
 
     cmd = 'elm make --report=json --output=/dev/null ${temp_file}'
     regex = (r'^@type=(?P<type>.*?)@@@'
@@ -58,7 +58,7 @@ class Elm(Linter):
         return functools.reduce(lambda a, b: a + "\n" + self.reduce_problems(b), problems, "")
 
     def reduce_problems(self, error):
-        """Pads string so they will match regex."""
+        """Pad string so they will match regex."""
         region = error.get('subregion') or error.get('region')
 
         column = ''
@@ -69,7 +69,7 @@ class Elm(Linter):
             highlight = "x" * (region['end']['column'] - region['start']['column'])
 
         def pad_string(name, value):
-            """Pads string so they will match regex."""
+            """Pad string so they will match regex."""
             return "@{a}={b}@@@".format(a=name, b=value)
 
         return "".join([
@@ -85,8 +85,10 @@ class Elm(Linter):
 
         def resolve_message(message):
             """
-            Resolves a message type to a string, as elm make returns objects
+
+            Resolve a message type to a string, as elm make returns objects
             for formatted strings and plain strings for unformatted ones
+            
             """
             return message if isinstance(message, str) else message['string']
 
