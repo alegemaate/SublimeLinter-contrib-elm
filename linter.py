@@ -18,11 +18,16 @@ from SublimeLinter.lint import Linter, util
 
 LOGGER = logging.getLogger('SublimeLinter.plugin.elm')
 
+
 class Elm(Linter):
     """Provides an interface to elm make linting."""
 
     cmd = 'elm make --report=json --output=/dev/null ${temp_file}'
-    regex = (r'^@type=(?P<type>.*?)@@@@line=(?P<line>.*?)@@@@col=(?P<col>.*?)@@@@message=(?P<message>[\s\S]*?)@@@$')
+    regex = (r'^@type=(?P<type>.*?)@@@'
+             r'@line=(?P<line>.*?)@@@'
+             r'@col=(?P<col>.*?)@@@'
+             r'@message=(?P<message>[\s\S]*?)@@@$')
+
     multiline = True
     tempfile_suffix = 'elm'
     error_stream = util.STREAM_BOTH
@@ -32,7 +37,7 @@ class Elm(Linter):
     }
 
     def run(self, cmd, code):
-        ''' Run elm make command and parse output'''
+        """Run elm make command and parse output."""
         cmd_output = super().run(cmd, code)
         json_output = None
 
@@ -48,12 +53,12 @@ class Elm(Linter):
         return functools.reduce(lambda a, b: a + "\n" + self.reduce_errors(b), errors, "")
 
     def reduce_errors(self, json_errors):
-        ''' Reduce array of errors to be sublime friendly '''
+        """Reduce array of errors to be sublime friendly."""
         problems = json_errors['problems']
         return functools.reduce(lambda a, b: a + "\n" + self.reduce_problems(b), problems, "")
 
     def reduce_problems(self, error):
-        ''' Pads string so they will match regex '''
+        """Pad string so they will match regex."""
         region = error.get('subregion') or error.get('region')
 
         column = ''
@@ -64,7 +69,7 @@ class Elm(Linter):
             highlight = "x" * (region['end']['column'] - region['start']['column'])
 
         def pad_string(name, value):
-            ''' Pads string so they will match regex '''
+            """Pad string so they will match regex."""
             return "@{a}={b}@@@".format(a=name, b=value)
 
         return "".join([
@@ -76,13 +81,16 @@ class Elm(Linter):
         ])
 
     def reduce_message(self, json_error):
-        ''' Reduce messages to a single message '''
+        """Reduce messages to a single message."""
 
         def resolve_message(message):
-            '''
-            Resolves a message type to a string, as elm make returns objects 
-            for formatted strings and plain strings for unformatted ones
-            '''
+            """
+            Resolve a message type to a string.
+
+            Since the elm compiler returns objects a combination of objects
+            and strings (objects including advanced formatting), the code
+            below must extract the string from the object.
+            """
             return message if isinstance(message, str) else message['string']
 
         message = functools.reduce(lambda a, b: a + resolve_message(b), json_error['message'], "")
