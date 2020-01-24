@@ -1,5 +1,7 @@
 # SublimeLinter-contrib-elm
 
+Note! This is still work in progress, expect a few bugs!
+
 ![Build Status](https://github.com/alegemaate/SublimeLinter-contrib-elm/workflows/flake8/badge.svg)
 
 This linter plugin for [SublimeLinter](https://github.com/SublimeLinter/SublimeLinter) provides linting functionality for the [Elm language](http://elm-lang.org).
