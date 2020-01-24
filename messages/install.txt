@@ -1,0 +1,16 @@
+SublimeLinter-contrib-elm
+-------------------------------
+This linter plugin for SublimeLinter provides a linter for the Elm language.
+
+** IMPORTANT! **
+
+Before this plugin will activate, you *must*
+follow these instructions:
+
+1. [Elm](http://elm-lang.org) must be installed, and the default `elm` command must be in your path.
+
+2. You must ensure that the [Elm language Sublime package](http://github.com/deadfoxygrandpa/Elm.tmLanguage) is installed.
+
+That's it!
+
+More information can be found at https://github.com/alegemaate/SublimeLinter-contrib-elm
