@@ -85,10 +85,11 @@ class Elm(Linter):
 
         def resolve_message(message):
             """
+            Resolve a message type to a string.
 
-            Resolve a message type to a string, as elm make returns objects
-            for formatted strings and plain strings for unformatted ones
-            
+            Since the elm compiler returns objects a combination of objects
+            and strings (objects including advanced formatting), the code
+            below must extract the string from the object.
             """
             return message if isinstance(message, str) else message['string']
 
